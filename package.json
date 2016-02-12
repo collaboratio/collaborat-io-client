@@ -1,0 +1,16 @@
+{
+  "name": "collaborat-io-client",
+  "version": "0.0.0",
+  "description": "Collaborat-io real communication client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ftp-client": "^0.2.2",
+    "socket.io-client": "^1.3.7",
+    "socket.io-p2p": "^2.1.1"
+  }
+}
