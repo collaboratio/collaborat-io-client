@@ -57,13 +57,13 @@ function CollaboratioEvent(eventName) {
 	this.name = eventName;
 }
 
-CollaboratioEvent.prototype.suscribe = function (fn) {
+CollaboratioEvent.prototype.subscribe = function (fn) {
 	if(typeof fn == 'function') this.subscriptions.push(fn);
 	return this;
 };
 
-CollaboratioEvent.prototype.call = function () {
-	this.subscriptions.forEach(function (subscription) { subscription(); });
+CollaboratioEvent.prototype.call = function (data) {
+	this.subscriptions.forEach(function (subscription) { subscription(data); });
 };
 
 },{}],3:[function(require,module,exports){
@@ -110,7 +110,7 @@ RoomsManager.prototype.getOrCreateEvent = function (eventName) {
  * @param  {Function} fn        Function
  */
 RoomsManager.prototype.subscribe = function (eventName, fn) {
-	this.getOrCreateEvent(eventName).suscribe(fn);
+	this.getOrCreateEvent(eventName).subscribe(fn);
 };
 
 
@@ -121,7 +121,7 @@ RoomsManager.prototype.subscribe = function (eventName, fn) {
  */
 function registerEvent(manager, event) {
 	manager.socket.on(manager.prefix + ':' +  event.name, function (data) {
-		this.getOrCreateEvent(event.name).call();
+		this.getOrCreateEvent(event.name).call(data);
 	}.bind(manager));
 }
 
@@ -137,14 +137,24 @@ RoomsManager.prototype.expose = function () {
 		return true;
 	}.bind(this);
 
+	var joinRoom = function (roomName) {
+		if(!roomName) return false;
+		this.socket.emit('room:join', roomName);
+		return true;
+	}.bind(this);
+
+	var listRooms = function () {
+		this.socket.emit('room:list');
+	}.bind(this);
+
 	return {
 		rooms : {
 			create : createRoom,
+			join : joinRoom,
+			list : listRooms,
 			subscribe: this.subscribe.bind(this)
 			/*
 			remove: removeRoom,
-			join: joinRoom,
-			leave: leaveRoom,
 			get: getRoom,
 			exists: existsRoom*/
 		}
