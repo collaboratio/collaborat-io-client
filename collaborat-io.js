@@ -97,7 +97,7 @@ class RoomsManager {
 	}
 
 	/**
-	* Given a name, get the event with this name or create one
+	* Register a event
 	*
 	* USAGE:
 	* 	collaboratio.on('create')
